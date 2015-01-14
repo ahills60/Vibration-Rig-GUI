@@ -22,7 +22,7 @@ function varargout = VibrationPlayer(varargin)
 
 % Edit the above text to modify the response to help VibrationPlayer
 
-% Last Modified by GUIDE v2.5 14-Jan-2015 16:43:09
+% Last Modified by GUIDE v2.5 14-Jan-2015 18:35:32
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -162,3 +162,63 @@ function closeButton_KeyPressFcn(hObject, eventdata, handles)
 %	Character: character interpretation of the key(s) that was pressed
 %	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
 % handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on selection change in varListBox.
+function varListBox_Callback(hObject, eventdata, handles)
+% hObject    handle to varListBox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns varListBox contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from varListBox
+
+
+% --- Executes during object creation, after setting all properties.
+function varListBox_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to varListBox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in loadVarButton.
+function loadVarButton_Callback(hObject, eventdata, handles)
+% hObject    handle to loadVarButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+try
+    % Firstly, obtain all the variables from the UI elements
+    filepath = get(handles.pathEditBox, 'String');
+    varIdx = get(handles.varListBox, 'Value');
+    varNames = get(handles.varListBox, 'String');
+    
+    % Then extract what we want from them
+    varName = varNames{varIdx};
+    
+    % ... to load the data...
+    variable = load(filepath, varName);
+    variable = variable.(varName);
+    
+    if min(size(variable)) > 1
+        errordlg('Selected variable is not a vector. Please select a valid variable.');
+        return
+    end
+    
+    % Normalise wrt the largest min or max value
+    variable = variable - mean(variable);
+    variable = variable ./ max(variable, -min(variable));
+    
+    % Before plotting in the axis
+    plot(handles.timeAxis, 1:length(variable), variable, 'y');
+    set(handles.timeAxis, 'Color', [0 0 0]);
+    ylim(-1,1);
+    xlim(0, length(variable) + 1);
+catch
+    return
+end
