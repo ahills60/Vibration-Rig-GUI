@@ -78,7 +78,7 @@ function closeButton_Callback(hObject, eventdata, handles)
 % hObject    handle to closeButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+close(gcf)
 
 % --- Executes on button press in playButton.
 function playButton_Callback(hObject, eventdata, handles)
@@ -88,18 +88,18 @@ function playButton_Callback(hObject, eventdata, handles)
 
 
 
-function edit1_Callback(hObject, eventdata, handles)
-% hObject    handle to edit1 (see GCBO)
+function pathEditBox_Callback(hObject, eventdata, handles)
+% hObject    handle to pathEditBox (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edit1 as text
-%        str2double(get(hObject,'String')) returns contents of edit1 as a double
+% Hints: get(hObject,'String') returns contents of pathEditBox as text
+%        str2double(get(hObject,'String')) returns contents of pathEditBox as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function edit1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit1 (see GCBO)
+function pathEditBox_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to pathEditBox (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -115,7 +115,12 @@ function browseButton_Callback(hObject, eventdata, handles)
 % hObject    handle to browseButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+[filename, filepath] = uigetfile({'*.mat', 'MATLAB save file'}, 'Browse signature files to load');
 
+% Make sure the filename is not empty (i.e. cancel)
+if ~isequal(filename, 0) && ~isequal(filepath, 0)
+    set(handles.pathEditBox, 'String', [filepath filename]);
+end
 
 
 % --- Executes on button press in openButton.
@@ -124,6 +129,30 @@ function openButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+% Extract the path in the edit box
+filepath = get(handles.pathEditBox, 'String');
+
+% Ensure that the file exists before trying to open it.
+if exist(filepath, 'file') ~= 2
+    set(handles.varListBox, 'Enable', 'off');
+    set(handles.loadVarButton, 'Enable', 'off');
+    errordlg('Unable to locate the selected file. Please select a valid file.');
+    return
+end
+
+% Get a cell list of objects within the given file.
+varList = who('-file', filepath);
+
+% Upload the file contents to the variable list box.
+set(handles.varListBox, 'String', varList);
+% Reset index
+set(handles.varListBox, 'Value', 1.0);
+
+% Before finally enabling again
+if length(varList) > 0
+    set(handles.varListBox, 'Enable', 'on');
+    set(handles.loadVarButton, 'Enable', 'on');
+end
 
 % --- Executes on key press with focus on closeButton and none of its controls.
 function closeButton_KeyPressFcn(hObject, eventdata, handles)
