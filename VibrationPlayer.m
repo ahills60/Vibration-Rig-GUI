@@ -85,7 +85,7 @@ function playButton_Callback(hObject, eventdata, handles)
 % hObject    handle to playButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+evalin('base', 'play(SoundPlayer);');
 
 
 function pathEditBox_Callback(hObject, eventdata, handles)
@@ -210,7 +210,9 @@ try
     varName = varNames{varIdx};
     
     % ... to load the data...
-    variable = load(filepath, varName);
+    variable = load(filepath, varName, 'Config');
+    ConfigData = variable.Config;
+    assignin('base', 'SoundConfig', ConfigData);
     variable = variable.(varName);
     
     if min(size(variable)) > 1
@@ -222,11 +224,14 @@ try
     variable = variable - mean(variable);
     variable = variable ./ max(variable, -min(variable));
     
+    assignin('base', 'SoundData', variable)
+    
     % Before plotting in the axis
     plot(handles.timeAxis, 1:length(variable), variable, 'y');
     set(handles.timeAxis, 'Color', [0 0 0]);
     ylim(-1,1);
     xlim(0, length(variable) + 1);
+    evalin('base', 'SoundPlayer = audioplayer(SoundData, SoundConfig.SampleRate, SoundConfig.BitRate);');
 catch
     return
 end
