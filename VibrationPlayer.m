@@ -143,6 +143,14 @@ end
 % Get a cell list of objects within the given file.
 varList = who('-file', filepath);
 
+if ~ismember('Config', varList) || length(varList) == 1
+    errordlg('This variable doesn''t contain audio metadata. Please select a valid file.');
+    return
+end
+    
+% Clean the variable list:
+varList = setdiff(varList, 'Config');
+
 % Upload the file contents to the variable list box.
 set(handles.varListBox, 'String', varList);
 % Reset index
