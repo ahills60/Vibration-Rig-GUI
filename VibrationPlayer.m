@@ -22,7 +22,7 @@ function varargout = VibrationPlayer(varargin)
 
 % Edit the above text to modify the response to help VibrationPlayer
 
-% Last Modified by GUIDE v2.5 14-Jan-2015 18:35:32
+% Last Modified by GUIDE v2.5 15-Jan-2015 17:18:54
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -234,4 +234,18 @@ try
     evalin('base', 'SoundPlayer = audioplayer(SoundData, SoundConfig.SampleRate, SoundConfig.BitRate);');
 catch
     return
+end
+
+
+% --- Executes on button press in pauseResumeButton.
+function pauseResumeButton_Callback(hObject, eventdata, handles)
+% hObject    handle to pauseResumeButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+playerState = evalin('base', 'isplaying(SoundPlayer);');
+
+if playerState
+    evalin('base','pause(SoundPlayer);');
+else
+    evalin('base', 'resume(player);');
 end
