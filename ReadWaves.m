@@ -21,7 +21,7 @@ elseif nargin == 1 || nargin == 2
             if isempty(splits{end})
                 error('Unable to extract destination filename from path.')
             end
-            outfilename = splits{end}
+            outfilename = splits{end};
         else
             % base on filename
             outfilename = f;
