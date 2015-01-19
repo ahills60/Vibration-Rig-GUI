@@ -247,5 +247,5 @@ playerState = evalin('base', 'isplaying(SoundPlayer);');
 if playerState
     evalin('base','pause(SoundPlayer);');
 else
-    evalin('base', 'resume(player);');
+    evalin('base', 'resume(SoundPlayer);');
 end
