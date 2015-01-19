@@ -45,7 +45,7 @@ initialFs = 0;
 initialBR = 0;
 
 for idx = 1:length(filelist)
-    currFilename = filelist(idx).name
+    currFilename = filelist(idx).name;
     currFilepath = [p filesep currFilename];
     
     varname = matlab.lang.makeValidName(currFilename);
@@ -70,7 +70,7 @@ for idx = 1:length(filelist)
         end
     end
     
-    outvar = setfield(outvar, varname, wav)
+    outvar = setfield(outvar, varname, wav);
 end
 
 % Now quickly create the Config variable and add to the output variable struct
@@ -80,4 +80,4 @@ Config.BitRate = initialBR;
 outvar.Config = Config;
 
 % Save all variables to the destination file
-save(outfilename, '-struct', outvar)
+save(outfilename, '-struct', 'outvar')
