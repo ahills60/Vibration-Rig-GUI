@@ -225,13 +225,13 @@ try
     variable = variable ./ max(variable, -min(variable));
     
     assignin('base', 'SoundData', variable)
+    evalin('base', 'SoundPlayer = audioplayer(SoundData, SoundConfig.SampleRate, SoundConfig.BitRate);');
     
     % Before plotting in the axis
     plot(handles.timeAxis, 1:length(variable), variable, 'y');
     set(handles.timeAxis, 'Color', [0 0 0]);
     ylim(-1,1);
     xlim(0, length(variable) + 1);
-    evalin('base', 'SoundPlayer = audioplayer(SoundData, SoundConfig.SampleRate, SoundConfig.BitRate);');
 catch
     return
 end
