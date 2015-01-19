@@ -57,7 +57,9 @@ for idx = 1:length(filelist)
     end
     
     % Read the wave file, taking the waveform, sampling frequency and bit rate
-    [wav, s, b] = wavread(currFilepath);
+    [wav, s] = audioread(currFilepath);
+    wavinfo = audioinfo(currFilepath);
+    b = wavinfo.BitsPerSample;
     
     % Save the sample frequency and bit rate if it hasn't been done already
     if initialFs == 0 && initialBR == 0
