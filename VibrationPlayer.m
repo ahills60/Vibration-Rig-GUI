@@ -22,7 +22,7 @@ function varargout = VibrationPlayer(varargin)
 
 % Edit the above text to modify the response to help VibrationPlayer
 
-% Last Modified by GUIDE v2.5 15-Jan-2015 17:18:54
+% Last Modified by GUIDE v2.5 20-Jan-2015 16:29:03
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
