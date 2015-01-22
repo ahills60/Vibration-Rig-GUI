@@ -157,7 +157,7 @@ set(handles.varListBox, 'String', varList);
 set(handles.varListBox, 'Value', 1.0);
 
 % Before finally enabling again
-if length(varList) > 0
+if ~isempty(varList)
     set(handles.varListBox, 'Enable', 'on');
     set(handles.loadVarButton, 'Enable', 'on');
 end
