@@ -21,4 +21,4 @@ The MATLAB file will contain variables inherit the same (or similar in the event
 > Note that this function requires that all files have the same sampling frequency and bit rate for them to be included within the same MATLAB save file. Functionality for different bit rates or sampling frequencies has yet to be implemented.
 
 # Vibration Player GUI
-Saved MATLAB files can be loaded into the Vibration Player GUI for playback. Variables within the MATLAB save file can be selected easily using the list box. 
+Saved MATLAB files can be loaded into the Vibration Player GUI for playback. To load and play back an audio sample, browse for the MATLAB file you wish to import, then click on the open button. The list box is then populated with the variable names contained within the selected MATLAB save file. Selecting a variable and clicking load will automatically scale and display within the figure's axis. Playing the selected sound sample can be achieved using the playback buttons.
