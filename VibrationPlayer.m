@@ -230,8 +230,8 @@ try
     % Before plotting in the axis
     plot(handles.timeAxis, 1:length(variable), variable, 'y');
     set(handles.timeAxis, 'Color', [0 0 0]);
-    ylim(-1,1);
-    xlim(0, length(variable) + 1);
+    ylim([-1,1]);
+    xlim([0, length(variable) + 1]);
 catch
     return
 end
