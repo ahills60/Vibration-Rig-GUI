@@ -5,7 +5,8 @@ try
     handles = evalin('base', 'FH');
     currSample = evalin('base', 'SoundPlayer.CurrentSample');
     sampleRate = evalin('base', 'SoundPlayer.SampleRate');
-catch exception
+    PlayerHead = evalin('base', 'PlayerHead');
+catch
     % Variable likely doesn't exist, so just return.
     return
 end
@@ -16,3 +17,4 @@ nomins = floor(theTime / 60);
 nosecs = theTime - (nomins * 60);
 timeStr = sprintf('%02u:%05.2f', nomins, nosecs);
 set(handles.TheTime, 'String', timeStr);
+set(PlayerHead.handle, 'Xdata', 1 + [currSample currSample])

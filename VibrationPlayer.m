@@ -232,10 +232,16 @@ try
     evalin('base', 'SoundPlayer.TimerFcn = @(~,~)VibrationPlayer_timerCall;');
     
     % Before plotting in the axis
+    hold off;
     plot(handles.timeAxis, 1:length(variable), variable, 'y');
     set(handles.timeAxis, 'Color', [0 0 0]);
     ylim([-1,1]);
     xlim([0, length(variable) + 1]);
+    hold on;
+    pdisp = plot(handles.timeAxis, [0 0], [-1 1], 'r');
+    PlayerHead.loc = 0;
+    PlayerHead.handle = pdisp;
+    assignin('base', 'PlayerHead', PlayerHead);
 catch
     return
 end
