@@ -162,6 +162,9 @@ if ~isempty(varList)
     set(handles.loadVarButton, 'Enable', 'on');
 end
 
+% Not the best place for this, but it's at least going to be called here:
+assignin('base', 'FH', handles);
+
 % --- Executes on key press with focus on closeButton and none of its controls.
 function closeButton_KeyPressFcn(hObject, eventdata, handles)
 % hObject    handle to closeButton (see GCBO)
@@ -226,6 +229,7 @@ try
     
     assignin('base', 'SoundData', variable)
     evalin('base', 'SoundPlayer = audioplayer(SoundData, SoundConfig.SampleRate, SoundConfig.BitRate);');
+    evalin('base', 'SoundPlayer.TimerFcn = @(~,~)VibrationPlayer_timerCall;');
     
     % Before plotting in the axis
     plot(handles.timeAxis, 1:length(variable), variable, 'y');
@@ -235,7 +239,36 @@ try
 catch
     return
 end
-
+    timeinSecs = length(variable) / ConfigData.SampleRate;
+    timeinMins = floor(timeinSecs / 60);
+    
+    % Now to add the time at reasonable locations:
+    if timeinMins == 0
+        % Seconds only
+        if floor(timeinSecs) <= 30
+            tickLocs = [0:5:timeinSecs];
+        else
+            tickLocs = [0:10:timeinSecs];
+        end
+        minsVec = zeros(1, length(tickLocs));
+        secsVec = tickLocs;
+    else
+        % Do every 30 seconds
+        tickLocs = [0:30:timeinSecs];
+        % Now deduct the number of minutes from the number of seconds:
+        minsVec = floor(tickLocs / 60);
+        secsVec = tickLocs - (minsVec * 60);
+    end
+    
+    timeLabels = cell(1, length(secsVec));
+    % Now product a cell of nicely formatted times:
+    for n = 1:length(secsVec)
+        timeLabels{n} = sprintf('%02u:%02u', minsVec(n), secsVec(n));
+    end
+    
+    % Now apply the label to the axis
+    set(handles.timeAxis, 'XTick', tickLocs * ConfigData.SampleRate + 1);
+    set(handles.timeAxis, 'XTickLabel', timeLabels);
 
 % --- Executes on button press in pauseResumeButton.
 function pauseResumeButton_Callback(hObject, eventdata, handles)
