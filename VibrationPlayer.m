@@ -22,7 +22,7 @@ function varargout = VibrationPlayer(varargin)
 
 % Edit the above text to modify the response to help VibrationPlayer
 
-% Last Modified by GUIDE v2.5 20-Jan-2015 16:29:03
+% Last Modified by GUIDE v2.5 08-Apr-2015 19:13:45
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -275,6 +275,10 @@ end
     % Now apply the label to the axis
     set(handles.timeAxis, 'XTick', tickLocs * ConfigData.SampleRate + 1);
     set(handles.timeAxis, 'XTickLabel', timeLabels);
+    childItems = get(handles.timeAxis, 'Children');
+    for n = 1:length(childItems)
+        set(childItems(n), 'ButtonDownFcn', @(hObject,eventdata)VibrationPlayer('timeAxis_ButtonDownFcn',hObject,eventdata,guidata(hObject)));
+    end
 
 % --- Executes on button press in pauseResumeButton.
 function pauseResumeButton_Callback(hObject, eventdata, handles)
@@ -287,4 +291,29 @@ if playerState
     evalin('base','pause(SoundPlayer);');
 else
     evalin('base', 'resume(SoundPlayer);');
+end
+
+
+% --- Executes on mouse press over axes background.
+function timeAxis_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to timeAxis (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+try
+    clickLoc = get(handles.timeAxis, 'CurrentPoint');
+catch
+    return
+end
+
+playerState = evalin('base', 'isplaying(SoundPlayer);');
+
+evalin('base', 'pause(SoundPlayer);');
+
+evalin('base', sprintf('play(SoundPlayer, %0.0f);', floor(clickLoc(1))));
+
+if playerState
+    evalin('base', 'resume(SoundPlayer);');
+else
+    evalin('base', 'pause(SoundPlayer);');
 end

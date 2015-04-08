@@ -6,6 +6,11 @@ try
     currSample = evalin('base', 'SoundPlayer.CurrentSample');
     sampleRate = evalin('base', 'SoundPlayer.SampleRate');
     PlayerHead = evalin('base', 'PlayerHead');
+    
+    % Make sure handles are still valid:
+    if ~ishghandle(handles.TheTime)
+        evalin('base', 'clear(SoundPlayer);');
+    end
 catch
     % Variable likely doesn't exist, so just return.
     return
